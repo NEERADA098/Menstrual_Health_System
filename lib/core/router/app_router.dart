@@ -1,21 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/auth/presentation/pages/splash_screen.dart';
 import '../../features/auth/presentation/pages/auth_choice_page.dart';
 import '../../features/auth/presentation/pages/phone_login_page.dart';
 import '../../features/auth/presentation/pages/otp_verification_page.dart';
 import '../../features/auth/presentation/pages/email_login_page.dart';
 import '../../features/auth/presentation/pages/email_signup_page.dart';
-import '../../app.dart';
+import '../../features/cycle_tracking/presentation/pages/home_page.dart';
+import '../../features/cycle_tracking/presentation/pages/log_period_page.dart';
+import '../../features/cycle_tracking/presentation/pages/calendar_page.dart';
 
-/// AppRouter - Defines every "address" (route) in the app and which
-/// screen lives at that address.
-///
-/// WHY go_router INSTEAD OF Navigator.push() EVERYWHERE:
-/// go_router treats navigation like URLs (e.g., /login, /otp-verify).
-/// This makes deep linking possible later (e.g., an SMS could contain
-/// a link that opens the app directly to a specific screen), and
-/// keeps all your navigation logic in ONE file instead of scattered
-/// across every screen.
 class AppRouter {
   AppRouter._();
 
@@ -37,8 +30,6 @@ class AppRouter {
       GoRoute(
         path: '/otp-verify',
         builder: (context, state) {
-          // Extra data (verificationId, phoneNumber) is passed via
-          // the 'extra' parameter when navigating to this route.
           final extra = state.extra as Map<String, String>;
           return OtpVerificationPage(
             verificationId: extra['verificationId']!,
@@ -56,27 +47,16 @@ class AppRouter {
       ),
       GoRoute(
         path: '/home',
-        builder: (context, state) => const _TemporaryHomePage(),
+        builder: (context, state) => const HomePage(),
+      ),
+      GoRoute(
+        path: '/log-period',
+        builder: (context, state) => const LogPeriodPage(),
+      ),
+      GoRoute(
+        path: '/calendar',
+        builder: (context, state) => const CalendarPage(),
       ),
     ],
   );
-}
-
-/// Temporary placeholder - will be replaced with the real Home
-/// screen starting Phase 4 (Period Tracking Module).
-class _TemporaryHomePage extends StatelessWidget {
-  const _TemporaryHomePage();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: const Center(
-        child: Text(
-          'Welcome! You are logged in.\n(Real home page coming in Phase 4)',
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
 }

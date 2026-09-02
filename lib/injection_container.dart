@@ -19,6 +19,7 @@ import 'features/cycle_tracking/domain/repositories/cycle_repository.dart';
 import 'features/cycle_tracking/domain/usecases/log_cycle.dart';
 import 'features/cycle_tracking/domain/usecases/get_cycle_history.dart';
 import 'features/cycle_tracking/domain/usecases/get_current_cycle.dart';
+import 'features/cycle_tracking/presentation/bloc/cycle_bloc.dart';
 
 /// sl - Stands for "Service Locator." This is a single global
 /// instance of GetIt that holds every dependency your app needs.
@@ -61,6 +62,8 @@ Future<void> setupInjection() async {
   sl.registerLazySingleton(() => SignOut(sl()));
   sl.registerLazySingleton(() => GetCurrentUser(sl()));
 
+  
+
   // ── CYCLE TRACKING ────────────────────────────────────────────────
   sl.registerLazySingleton(() => DatabaseHelper.instance);
   sl.registerLazySingleton(() => CycleLocalDataSource(dbHelper: sl()));
@@ -84,6 +87,15 @@ Future<void> setupInjection() async {
       signUpWithEmail: sl(),
       signOut: sl(),
       getCurrentUser: sl(),
+    ),
+  );
+
+  // ── CYCLE TRACKING BLOC ─────────────────────────────────────────────
+  sl.registerLazySingleton(
+    () => CycleBloc(
+      logCycle: sl(),
+      getCycleHistory: sl(),
+      getCurrentCycle: sl(),
     ),
   );
 }
