@@ -1,4 +1,10 @@
 import 'package:get_it/get_it.dart';
+import 'features/symptom_tracking/data/datasources/symptom_local_datasource.dart';
+import 'features/symptom_tracking/data/repositories/symptom_repository_impl.dart';
+import 'features/symptom_tracking/domain/repositories/symptom_repository.dart';
+import 'features/symptom_tracking/domain/usecases/log_symptom.dart';
+import 'features/symptom_tracking/domain/usecases/get_symptoms_for_user.dart';
+import 'features/symptom_tracking/presentation/bloc/symptom_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -74,6 +80,20 @@ Future<void> setupInjection() async {
   sl.registerLazySingleton(() => GetCycleHistory(sl()));
   sl.registerLazySingleton(() => GetCurrentCycle(sl()));
 
+
+  // ── SYMPTOM TRACKING ─────────────────────────────────────────────────
+  sl.registerLazySingleton(() => SymptomLocalDataSource(dbHelper: sl()));
+  sl.registerLazySingleton<SymptomRepository>(
+    () => SymptomRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(() => LogSymptom(sl()));
+  sl.registerLazySingleton(() => GetSymptomsForUser(sl()));
+  sl.registerLazySingleton(
+    () => SymptomBloc(
+      logSymptom: sl(),
+      getSymptomsForUser: sl(),
+    ),
+  );
   // ── BLOCS ────────────────────────────────────────────────────────
   // Note: registerFactory (not LazySingleton) - we want a FRESH
   // AuthBloc instance, though for app-wide auth state a singleton

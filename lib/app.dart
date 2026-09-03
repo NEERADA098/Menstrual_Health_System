@@ -7,6 +7,7 @@ import 'injection_container.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_event.dart';
 import 'features/cycle_tracking/presentation/bloc/cycle_bloc.dart';
+import 'features/symptom_tracking/presentation/bloc/symptom_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -20,6 +21,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider<CycleBloc>(
           create: (_) => sl<CycleBloc>(),
+        ),
+        BlocProvider<SymptomBloc>(
+          create: (_) => sl<SymptomBloc>(),
         ),
       ],
       child: MaterialApp.router(

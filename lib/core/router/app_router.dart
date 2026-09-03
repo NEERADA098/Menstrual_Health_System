@@ -8,6 +8,7 @@ import '../../features/auth/presentation/pages/email_signup_page.dart';
 import '../../features/cycle_tracking/presentation/pages/home_page.dart';
 import '../../features/cycle_tracking/presentation/pages/log_period_page.dart';
 import '../../features/cycle_tracking/presentation/pages/calendar_page.dart';
+import '../../features/symptom_tracking/presentation/pages/log_symptom_page.dart';
 
 class AppRouter {
   AppRouter._();
@@ -56,6 +57,10 @@ class AppRouter {
       GoRoute(
         path: '/calendar',
         builder: (context, state) => const CalendarPage(),
+      ),
+      GoRoute(
+        path: '/log-symptom',
+        builder: (context, state) => const LogSymptomPage(),
       ),
     ],
   );

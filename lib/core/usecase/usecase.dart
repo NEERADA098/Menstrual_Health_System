@@ -12,10 +12,10 @@ import '../errors/failures.dart';
 /// Type parameters explained:
 /// - Type: what this use case RETURNS on success (e.g., UserEntity)
 /// - Params: what this use case NEEDS as input (e.g., phone number)
-abstract class UseCase<Type, Params> {
+abstract class UseCase<Output, Params> {
   /// Every use case must implement call() - this is what makes
   /// the class "callable" like a function: myUseCase(params)
-  Future<Either<Failure, Type>> call(Params params);
+  Future<Either<Failure, Output>> call(Params params);
 }
 
 /// NoParams - Used when a use case needs NO input.

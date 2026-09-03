@@ -77,6 +77,12 @@ class _HomePageState extends State<HomePage> {
                   icon: const Icon(Icons.add),
                   label: const Text('Log Period'),
                 ),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: () => context.push('/log-symptom'),
+                  icon: const Icon(Icons.mood),
+                  label: const Text('Log Symptoms'),
+                ),
                 const SizedBox(height: 24),
                 _QuickStatsRow(
                   averageCycleLength: loaded.averageCycleLength,
