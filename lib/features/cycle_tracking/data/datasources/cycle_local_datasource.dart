@@ -41,6 +41,27 @@ class CycleLocalDataSource {
     );
 
     await db.insert('cycle_logs', model.toMap());
+
+
+
+    await db.insert('sync_queue', {
+
+      'id': _uuid.v4(),
+
+      'table_name': 'cycle_logs',
+
+      'record_id': model.id,
+
+      'operation': 'INSERT',
+
+      'payload': '{}',
+
+      'created_at': now.toIso8601String(),
+
+      'retry_count': 0,
+
+    });
+
     return model;
   }
 

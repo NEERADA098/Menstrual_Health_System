@@ -9,6 +9,8 @@ import 'features/auth/presentation/bloc/auth_event.dart';
 import 'features/cycle_tracking/presentation/bloc/cycle_bloc.dart';
 import 'features/symptom_tracking/presentation/bloc/symptom_bloc.dart';
 
+import 'core/sync/sync_manager.dart';
+
 class App extends StatelessWidget {
   const App({super.key});
 
@@ -26,7 +28,21 @@ class App extends StatelessWidget {
           create: (_) => sl<SymptomBloc>(),
         ),
       ],
-      child: MaterialApp.router(
+      child: BlocListener<AuthBloc, AuthState>(
+
+        listener: (context, state) {
+
+          if (state is AuthAuthenticated) {
+
+            // Start listening for connectivity to trigger auto-sync
+
+            sl<SyncManager>().initialize(state.user.uid);
+
+          }
+
+        },
+
+        child: MaterialApp.router(
         title: 'CycleAI',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,

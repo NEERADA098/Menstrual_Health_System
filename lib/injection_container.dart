@@ -1,4 +1,10 @@
 import 'package:get_it/get_it.dart';
+import 'core/network/api_client.dart';
+
+import 'core/sync/sync_service.dart';
+
+import 'core/sync/sync_manager.dart';
+
 import 'features/symptom_tracking/data/datasources/symptom_local_datasource.dart';
 import 'features/symptom_tracking/data/repositories/symptom_repository_impl.dart';
 import 'features/symptom_tracking/domain/repositories/symptom_repository.dart';
@@ -69,6 +75,14 @@ Future<void> setupInjection() async {
   sl.registerLazySingleton(() => GetCurrentUser(sl()));
 
   
+
+
+
+ sl.registerLazySingleton(() => ApiClient());
+
+  sl.registerLazySingleton(() => SyncService(dbHelper: sl()));
+
+  sl.registerLazySingleton(() => SyncManager(syncService: sl()));
 
   // ── CYCLE TRACKING ────────────────────────────────────────────────
   sl.registerLazySingleton(() => DatabaseHelper.instance);
