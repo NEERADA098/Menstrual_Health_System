@@ -33,24 +33,14 @@ class SymptomLocalDataSource {
 
     await db.insert('symptom_logs', model.toMap());
 
-    // Add to sync_queue for offline-first sync
-
     await db.insert('sync_queue', {
-
       'id': _uuid.v4(),
-
       'table_name': 'symptom_logs',
-
       'record_id': model.id,
-
       'operation': 'INSERT',
-
       'payload': '{}',
-
       'created_at': now.toIso8601String(),
-
       'retry_count': 0,
-
     });
 
     return model;
@@ -75,7 +65,6 @@ class SymptomLocalDataSource {
     final dateStr = DateTime(date.year, date.month, date.day)
         .toIso8601String()
         .substring(0, 10);
-
     final maps = await db.query(
       'symptom_logs',
       where: 'user_id = ? AND log_date LIKE ?',

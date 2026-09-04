@@ -12,7 +12,11 @@ class SplashScreen extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
-          context.go('/home');
+          if (state.user.role.name == 'ashaWorker') {
+            context.go('/asha-dashboard');
+          } else {
+            context.go('/home');
+          }
         } else if (state is AuthUnauthenticated) {
           context.go('/auth-choice');
         } else if (state is AuthError) {

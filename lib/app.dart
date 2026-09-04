@@ -6,9 +6,10 @@ import 'core/router/app_router.dart';
 import 'injection_container.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_event.dart';
+import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/cycle_tracking/presentation/bloc/cycle_bloc.dart';
 import 'features/symptom_tracking/presentation/bloc/symptom_bloc.dart';
-
+import 'features/asha_dashboard/presentation/bloc/asha_bloc.dart';
 import 'core/sync/sync_manager.dart';
 
 class App extends StatelessWidget {
@@ -27,31 +28,27 @@ class App extends StatelessWidget {
         BlocProvider<SymptomBloc>(
           create: (_) => sl<SymptomBloc>(),
         ),
+        BlocProvider<AshaBloc>(
+          create: (_) => sl<AshaBloc>(),
+        ),
       ],
       child: BlocListener<AuthBloc, AuthState>(
-
         listener: (context, state) {
-
           if (state is AuthAuthenticated) {
-
-            // Start listening for connectivity to trigger auto-sync
-
             sl<SyncManager>().initialize(state.user.uid);
-
           }
-
         },
-
         child: MaterialApp.router(
-        title: 'CycleAI',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        localizationsDelegates: context.localizationDelegates,
-        supportedLocales: context.supportedLocales,
-        locale: context.locale,
-        routerConfig: AppRouter.router,
+          title: 'CycleAI',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: ThemeMode.system,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          routerConfig: AppRouter.router,
+        ),
       ),
     );
   }

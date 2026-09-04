@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'features/asha_dashboard/presentation/bloc/asha_bloc.dart';
 import 'core/network/api_client.dart';
 
 import 'core/sync/sync_service.dart';
@@ -94,6 +95,8 @@ Future<void> setupInjection() async {
   sl.registerLazySingleton(() => GetCycleHistory(sl()));
   sl.registerLazySingleton(() => GetCurrentCycle(sl()));
 
+
+  sl.registerLazySingleton(() => AshaBloc());
 
   // ── SYMPTOM TRACKING ─────────────────────────────────────────────────
   sl.registerLazySingleton(() => SymptomLocalDataSource(dbHelper: sl()));
