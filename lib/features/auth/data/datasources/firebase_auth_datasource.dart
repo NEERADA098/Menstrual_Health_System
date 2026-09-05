@@ -172,14 +172,27 @@ class FirebaseAuthDataSource {
     final firebaseUser = _firebaseAuth.currentUser;
     if (firebaseUser == null) return null;
 
-    return _getUserProfile(firebaseUser.uid);
+    try {
+      return await _getUserProfile(firebaseUser.uid)
+          .timeout(const Duration(seconds: 10));
+    } catch (_) {
+      return null;
+    }
   }
 
   /// Private helper - fetches a user's profile document from Firestore.
   Future<UserModel?> _getUserProfile(String uid) async {
-    final doc = await _firestore.collection('users').doc(uid).get();
-    if (!doc.exists || doc.data() == null) return null;
-    return UserModel.fromFirestore(doc.data()!, uid);
+    try {
+      final doc = await _firestore
+          .collection('users')
+          .doc(uid)
+          .get()
+          .timeout(const Duration(seconds: 8));
+      if (!doc.exists || doc.data() == null) return null;
+      return UserModel.fromFirestore(doc.data()!, uid);
+    } catch (_) {
+      return null;
+    }
   }
 }
 

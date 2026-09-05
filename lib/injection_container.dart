@@ -83,7 +83,7 @@ Future<void> setupInjection() async {
 
   sl.registerLazySingleton(() => SyncService(dbHelper: sl()));
 
-  sl.registerLazySingleton(() => SyncManager(syncService: sl()));
+  // sl.registerLazySingleton(() => SyncManager(syncService: sl())); // re-enable on Android
 
   // ── CYCLE TRACKING ────────────────────────────────────────────────
   sl.registerLazySingleton(() => DatabaseHelper.instance);
