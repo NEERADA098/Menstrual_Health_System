@@ -39,6 +39,10 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.calendar_month_outlined),
             onPressed: () => context.go('/calendar'),
           ),
+          IconButton(
+            icon: const Icon(Icons.language),
+            onPressed: () => context.push('/language'),
+          ),
         ],
       ),
       body: BlocBuilder<CycleBloc, CycleState>(
