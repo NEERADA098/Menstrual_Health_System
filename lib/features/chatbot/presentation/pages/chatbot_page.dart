@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/voice/voice_service.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../bloc/chatbot_bloc.dart';
@@ -17,6 +19,14 @@ class ChatbotPage extends StatefulWidget {
 class _ChatbotPageState extends State<ChatbotPage> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  bool _isListening = false;
+
+  String get _currentLocaleId {
+    final locale = context.locale;
+    if (locale.languageCode == 'ml') return 'ml_IN';
+    if (locale.languageCode == 'hi') return 'hi_IN';
+    return 'en_US';
+  }
 
   void _sendMessage() {
     final text = _controller.text.trim();
@@ -28,6 +38,26 @@ class _ChatbotPageState extends State<ChatbotPage> {
         );
     _controller.clear();
     Future.delayed(const Duration(milliseconds: 300), _scrollToBottom);
+  }
+
+  Future<void> _toggleVoice() async {
+    if (_isListening) {
+      await voiceService.stopListening();
+      setState(() => _isListening = false);
+      return;
+    }
+
+    setState(() => _isListening = true);
+
+    await voiceService.startListening(
+      localeId: _currentLocaleId,
+      onResult: (text) {
+        setState(() {
+          _controller.text = text;
+          _isListening = false;
+        });
+      },
+    );
   }
 
   void _scrollToBottom() {
@@ -44,6 +74,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
   void dispose() {
     _controller.dispose();
     _scrollController.dispose();
+    if (_isListening) voiceService.stopListening();
     super.dispose();
   }
 
@@ -51,7 +82,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Health Assistant'),
+        title: Text('health_assistant'.tr()),
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 16),
@@ -60,13 +91,13 @@ class _ChatbotPageState extends State<ChatbotPage> {
               color: Colors.green.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.verified, color: Colors.green, size: 14),
-                SizedBox(width: 4),
+                const Icon(Icons.verified, color: Colors.green, size: 14),
+                const SizedBox(width: 4),
                 Text(
-                  'Clinically verified',
-                  style: TextStyle(fontSize: 11, color: Colors.green),
+                  'clinically_verified'.tr(),
+                  style: const TextStyle(fontSize: 11, color: Colors.green),
                 ),
               ],
             ),
@@ -100,7 +131,32 @@ class _ChatbotPageState extends State<ChatbotPage> {
               },
             ),
           ),
-          _InputBar(controller: _controller, onSend: _sendMessage),
+          if (_isListening)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              color: AppColors.primaryLight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.mic, color: AppColors.primary, size: 16),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Listening...',
+                    style: TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          _InputBar(
+            controller: _controller,
+            onSend: _sendMessage,
+            onVoice: _toggleVoice,
+            isListening: _isListening,
+          ),
         ],
       ),
     );
@@ -136,21 +192,23 @@ class _WelcomeView extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Text('Health Assistant',
+          Text('health_assistant'.tr(),
               style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Ask me anything about your menstrual health. '
             'My answers are based on verified medical knowledge.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: AppColors.grey600),
+            style: const TextStyle(color: AppColors.grey600),
           ),
           const SizedBox(height: 32),
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
-            child: Text('Suggested questions',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600, color: AppColors.grey700)),
+            child: Text(
+              'suggested_questions'.tr(),
+              style: const TextStyle(
+                  fontWeight: FontWeight.w600, color: AppColors.grey700),
+            ),
           ),
           const SizedBox(height: 12),
           ...suggestions.map((q) => _SuggestionChip(question: q)),
@@ -173,7 +231,8 @@ class _SuggestionChip extends StatelessWidget {
           final authState = context.read<AuthBloc>().state;
           if (authState is! AuthAuthenticated) return;
           context.read<ChatbotBloc>().add(
-                ChatMessageSent(question: question, userId: authState.user.uid),
+                ChatMessageSent(
+                    question: question, userId: authState.user.uid),
               );
         },
         borderRadius: BorderRadius.circular(12),
@@ -211,19 +270,20 @@ class _MessageBubble extends StatelessWidget {
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
-        constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.78),
-        padding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.78),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: isUser ? AppColors.primary : AppColors.white,
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
-            bottomLeft:
-                isUser ? const Radius.circular(16) : const Radius.circular(4),
-            bottomRight:
-                isUser ? const Radius.circular(4) : const Radius.circular(16),
+            bottomLeft: isUser
+                ? const Radius.circular(16)
+                : const Radius.circular(4),
+            bottomRight: isUser
+                ? const Radius.circular(4)
+                : const Radius.circular(16),
           ),
           border: isUser ? null : Border.all(color: AppColors.grey200),
         ),
@@ -278,7 +338,15 @@ class _TypingIndicator extends StatelessWidget {
 class _InputBar extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onSend;
-  const _InputBar({required this.controller, required this.onSend});
+  final VoidCallback onVoice;
+  final bool isListening;
+
+  const _InputBar({
+    required this.controller,
+    required this.onSend,
+    required this.onVoice,
+    required this.isListening,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -290,11 +358,31 @@ class _InputBar extends StatelessWidget {
       ),
       child: Row(
         children: [
+          GestureDetector(
+            onTap: onVoice,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: isListening
+                    ? AppColors.primary
+                    : AppColors.primaryLight,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                isListening ? Icons.stop : Icons.mic,
+                color: isListening ? AppColors.white : AppColors.primary,
+                size: 20,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
           Expanded(
             child: TextField(
               controller: controller,
               decoration: InputDecoration(
-                hintText: 'Ask about your health...',
+                hintText: 'ask_health_question'.tr(),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                   borderSide: BorderSide(color: AppColors.grey300),
