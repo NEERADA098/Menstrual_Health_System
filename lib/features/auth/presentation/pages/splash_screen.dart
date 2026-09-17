@@ -1,11 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_state.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkLanguageSelected();
+  }
+
+  Future<void> _checkLanguageSelected() async {
+    final prefs = await SharedPreferences.getInstance();
+    final languageSelected = prefs.getBool('language_selected') ?? false;
+    if (!languageSelected && mounted) {
+      context.go('/language');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

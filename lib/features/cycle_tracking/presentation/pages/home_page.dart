@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -32,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: AppColors.grey50,
       appBar: AppBar(
-        title: const Text('CycleAI'),
+        title: Text('app_name'.tr()),
         actions: [
           IconButton(
             icon: const Icon(Icons.calendar_month_outlined),
@@ -75,13 +76,19 @@ class _HomePageState extends State<HomePage> {
                 ElevatedButton.icon(
                   onPressed: () => context.push('/log-period'),
                   icon: const Icon(Icons.add),
-                  label: const Text('Log Period'),
+                  label: Text('log_period'.tr()),
                 ),
                 const SizedBox(height: 12),
                 OutlinedButton.icon(
                   onPressed: () => context.push('/log-symptom'),
                   icon: const Icon(Icons.mood),
-                  label: const Text('Log Symptoms'),
+                  label: Text('log_symptoms'.tr()),
+                ),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: () => context.push('/chatbot'),
+                  icon: const Icon(Icons.chat_outlined),
+                  label: Text('health_assistant'.tr()),
                 ),
                 const SizedBox(height: 24),
                 _QuickStatsRow(
@@ -112,14 +119,14 @@ class _QuickStatsRow extends StatelessWidget {
       children: [
         Expanded(
           child: _StatCard(
-            label: 'Avg. Cycle Length',
+            label: 'avg_cycle_length'.tr(),
             value: '$averageCycleLength days',
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: _StatCard(
-            label: 'Cycles Logged',
+            label: 'cycles_logged'.tr(),
             value: '$totalLogged',
           ),
         ),

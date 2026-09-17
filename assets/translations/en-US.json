@@ -1,98 +1,79 @@
 {
   "app_name": "CycleAI",
-  "app_tagline": "Your AI Health Companion",
-  
-  "nav": {
-    "home": "Home",
-    "calendar": "Calendar",
-    "chat": "Chat",
-    "learn": "Learn",
-    "profile": "Profile"
-  },
-  
-  "auth": {
-    "sign_in": "Sign In",
-    "sign_up": "Sign Up",
-    "email": "Email Address",
-    "password": "Password",
-    "confirm_password": "Confirm Password",
-    "forgot_password": "Forgot Password?",
-    "phone": "Phone Number",
-    "send_otp": "Send OTP",
-    "verify_otp": "Verify OTP",
-    "or": "or",
-    "already_have_account": "Already have an account?",
-    "dont_have_account": "Don't have an account?"
-  },
-  
-  "cycle": {
-    "title": "My Cycle",
-    "log_period": "Log Period",
-    "period_started": "Period Started",
-    "period_ended": "Period Ended",
-    "next_period": "Next Period",
-    "cycle_day": "Day {} of cycle",
-    "cycle_length": "Cycle Length",
-    "period_length": "Period Length",
-    "days": "days",
-    "irregular_detected": "Irregular cycle pattern detected",
-    "pcos_alert": "PCOS pattern detected - consult a doctor"
-  },
-  
-  "symptoms": {
-    "title": "Symptoms",
-    "log": "Log Symptoms",
-    "cramps": "Cramps",
-    "bloating": "Bloating",
-    "headache": "Headache",
-    "fatigue": "Fatigue",
-    "mood_swings": "Mood Swings",
-    "back_pain": "Back Pain",
-    "acne": "Acne",
-    "flow": "Flow",
-    "light": "Light",
-    "medium": "Medium",
-    "heavy": "Heavy"
-  },
-  
-  "chat": {
-    "title": "Health Assistant",
-    "hint": "Ask me about menstrual health...",
-    "disclaimer": "For educational purposes only. Not medical advice.",
-    "thinking": "Thinking..."
-  },
-  
-  "learn": {
-    "title": "Learn",
-    "subtitle": "Health Education"
-  },
-  
-  "supply": {
-    "title": "Pad Supply",
-    "request": "Request Pads",
-    "nearby": "Nearby Distribution"
-  },
-  
-  "iot": {
-    "title": "Incinerator",
-    "temperature": "Temperature",
-    "gas_level": "Gas Level",
-    "safe": "Safe to Use",
-    "warning": "Warning",
-    "danger": "Danger - Shutdown",
-    "offline": "Device Offline"
-  },
-  
-  "errors": {
-    "generic": "Something went wrong. Please try again.",
-    "network": "No internet connection.",
-    "offline_mode": "Offline mode. Data syncs when connected.",
-    "session_expired": "Session expired. Please sign in again."
-  },
-  
-  "offline": {
-    "banner": "You are offline",
-    "syncing": "Syncing data...",
-    "synced": "All data synced"
-  }
+  "app_tagline": "Your health companion",
+  "welcome": "Welcome to CycleAI",
+  "choose_how_to_continue": "Choose how you want to continue",
+  "continue_with_phone": "Continue with Phone Number",
+  "phone_subtitle": "Quick and easy - no password needed",
+  "continue_with_email": "Continue with Email",
+  "email_subtitle": "For ASHA workers and administrators",
+  "dont_have_account": "Don't have an account? Sign Up",
+  "sign_in": "Sign In",
+  "sign_up": "Sign Up",
+  "email_address": "Email Address",
+  "password": "Password",
+  "log_period": "Log Period",
+  "log_symptoms": "Log Symptoms",
+  "health_assistant": "Health Assistant",
+  "when_period_start": "When did your period start?",
+  "flow_intensity": "Flow intensity",
+  "light": "Light",
+  "medium": "Medium",
+  "heavy": "Heavy",
+  "save": "Save",
+  "save_symptoms": "Save Symptoms",
+  "how_feeling": "How are you feeling today?",
+  "select_all_apply": "Select all that apply",
+  "how_severe": "How severe?",
+  "severity_subtitle": "Based on how much it affects your daily activities",
+  "mild": "Mild",
+  "moderate": "Moderate",
+  "severe": "Severe",
+  "cramps": "Cramps",
+  "back_pain": "Back Pain",
+  "headache": "Headache",
+  "bloating": "Bloating",
+  "breast_tenderness": "Breast Tenderness",
+  "nausea": "Nausea",
+  "fatigue": "Fatigue",
+  "dizziness": "Dizziness",
+  "acne": "Acne",
+  "facial_hair": "Facial Hair",
+  "mood_swings": "Mood Swings",
+  "anxiety": "Anxiety",
+  "irritability": "Irritability",
+  "no_cycle_logged": "No cycle logged yet",
+  "avg_cycle_length": "Avg. Cycle Length",
+  "cycles_logged": "Cycles Logged",
+  "day": "Day",
+  "days": "days",
+  "next_period_in": "Next period in {days} days",
+  "period_may_be_due": "Period may be due",
+  "cycle_calendar": "Cycle Calendar",
+  "period": "Period",
+  "today": "Today",
+  "ask_health_question": "Ask about your health...",
+  "clinically_verified": "Clinically verified",
+  "suggested_questions": "Suggested questions",
+  "thinking": "Thinking...",
+  "are_cramps_normal": "Are my cramps normal?",
+  "normal_cycle_length": "What is a normal cycle length?",
+  "signs_of_pcos": "What are signs of PCOS?",
+  "when_see_doctor": "When should I see a doctor?",
+  "asha_dashboard": "ASHA Dashboard",
+  "community_overview": "Community Overview",
+  "total_users": "Total Users",
+  "active_this_week": "Active This Week",
+  "cycles_logged_stat": "Cycles Logged",
+  "flagged_users": "Flagged Users",
+  "users_requiring_followup": "Users Requiring Follow-up",
+  "no_flagged_users": "No users flagged for follow-up",
+  "select_language": "Select Language",
+  "language_subtitle": "Choose your preferred language",
+  "english": "English",
+  "malayalam": "Malayalam",
+  "hindi": "Hindi",
+  "continue_btn": "Continue",
+  "severe_cramps_warning": "Severe cramps that affect daily activities or start before your period may be worth discussing with a doctor.",
+  "server_not_available": "Could not connect to server"
 }

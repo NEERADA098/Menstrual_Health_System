@@ -10,6 +10,7 @@ import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/cycle_tracking/presentation/bloc/cycle_bloc.dart';
 import 'features/symptom_tracking/presentation/bloc/symptom_bloc.dart';
 import 'features/asha_dashboard/presentation/bloc/asha_bloc.dart';
+import 'features/chatbot/presentation/bloc/chatbot_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -29,6 +30,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider<AshaBloc>(
           create: (_) => sl<AshaBloc>(),
+        ),
+        BlocProvider<ChatbotBloc>(
+          create: (_) => sl<ChatbotBloc>(),
         ),
       ],
       child: MaterialApp.router(
