@@ -40,6 +40,10 @@ class _HomePageState extends State<HomePage> {
             onPressed: () => context.go('/calendar'),
           ),
           IconButton(
+            icon: const Icon(Icons.map_outlined),
+            onPressed: () => context.push('/map'),
+          ),
+          IconButton(
             icon: const Icon(Icons.language),
             onPressed: () => context.push('/language'),
           ),

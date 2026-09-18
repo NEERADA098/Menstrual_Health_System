@@ -12,6 +12,7 @@ import '../../features/symptom_tracking/presentation/pages/log_symptom_page.dart
 import '../../features/asha_dashboard/presentation/pages/asha_dashboard_page.dart';
 import '../../features/chatbot/presentation/pages/chatbot_page.dart';
 import '../../features/language/presentation/pages/language_selection_page.dart';
+import '../../features/geospatial/presentation/pages/map_page.dart';
 
 class AppRouter {
   AppRouter._();
@@ -26,6 +27,10 @@ class AppRouter {
       GoRoute(
         path: '/language',
         builder: (context, state) => const LanguageSelectionPage(),
+      ),
+      GoRoute(
+        path: '/map',
+        builder: (context, state) => const MapPage(),
       ),
       GoRoute(
         path: '/auth-choice',
