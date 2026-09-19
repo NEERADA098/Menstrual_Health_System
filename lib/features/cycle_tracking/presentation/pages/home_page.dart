@@ -98,6 +98,18 @@ class _HomePageState extends State<HomePage> {
                   icon: const Icon(Icons.chat_outlined),
                   label: Text('health_assistant'.tr()),
                 ),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: () => context.push('/supply'),
+                  icon: const Icon(Icons.inventory_2_outlined),
+                  label: const Text('Supply Analytics'),
+                ),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: () => context.push('/map'),
+                  icon: const Icon(Icons.map_outlined),
+                  label: const Text('Disposal Map'),
+                ),
                 const SizedBox(height: 24),
                 _QuickStatsRow(
                   averageCycleLength: loaded.averageCycleLength,
