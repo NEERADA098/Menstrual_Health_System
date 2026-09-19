@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../bloc/asha_bloc.dart';
@@ -26,6 +27,11 @@ class _AshaDashboardPageState extends State<AshaDashboardPage> {
       appBar: AppBar(
         title: const Text('ASHA Dashboard'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.inventory_2_outlined),
+            tooltip: 'Supply Analytics',
+            onPressed: () => context.push('/supply'),
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () => context

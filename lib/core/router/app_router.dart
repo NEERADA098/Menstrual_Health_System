@@ -13,6 +13,7 @@ import '../../features/asha_dashboard/presentation/pages/asha_dashboard_page.dar
 import '../../features/chatbot/presentation/pages/chatbot_page.dart';
 import '../../features/language/presentation/pages/language_selection_page.dart';
 import '../../features/geospatial/presentation/pages/map_page.dart';
+import '../../features/supply_analytics/presentation/pages/supply_analytics_page.dart';
 
 class AppRouter {
   AppRouter._();
@@ -31,6 +32,10 @@ class AppRouter {
       GoRoute(
         path: '/map',
         builder: (context, state) => const MapPage(),
+      ),
+      GoRoute(
+        path: '/supply',
+        builder: (context, state) => const SupplyAnalyticsPage(),
       ),
       GoRoute(
         path: '/auth-choice',

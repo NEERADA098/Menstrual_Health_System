@@ -67,3 +67,56 @@ class LocationDataSource {
     return list.map((e) => LocationModel.fromJson(e)).toList();
   }
 }
+
+
+class IncineratorStatusModel {
+  final String deviceId;
+  final double? temperatureCelsius;
+  final bool isBurning;
+  final double? fillPercentage;
+  final int usageCount;
+  final double? batteryLevel;
+  final bool isOnline;
+
+  const IncineratorStatusModel({
+    required this.deviceId,
+    this.temperatureCelsius,
+    required this.isBurning,
+    this.fillPercentage,
+    required this.usageCount,
+    this.batteryLevel,
+    required this.isOnline,
+  });
+
+  factory IncineratorStatusModel.fromJson(Map<String, dynamic> json) {
+    return IncineratorStatusModel(
+      deviceId: json['device_id'] as String,
+      temperatureCelsius: json['temperature_celsius'] != null
+          ? (json['temperature_celsius'] as num).toDouble()
+          : null,
+      isBurning: json['is_burning'] as bool? ?? false,
+      fillPercentage: json['fill_percentage'] != null
+          ? (json['fill_percentage'] as num).toDouble()
+          : null,
+      usageCount: json['usage_count'] as int? ?? 0,
+      batteryLevel: json['battery_level'] != null
+          ? (json['battery_level'] as num).toDouble()
+          : null,
+      isOnline: json['is_online'] as bool? ?? false,
+    );
+  }
+}
+
+extension IncineratorDataSource on LocationDataSource {
+  Future<IncineratorStatusModel?> getIncineratorStatus(
+      String deviceId) async {
+    try {
+      final response =
+          await _dio.get('/incinerators/$deviceId/status');
+      return IncineratorStatusModel.fromJson(
+          response.data as Map<String, dynamic>);
+    } catch (_) {
+      return null;
+    }
+  }
+}

@@ -12,6 +12,7 @@ import 'features/symptom_tracking/presentation/bloc/symptom_bloc.dart';
 import 'features/asha_dashboard/presentation/bloc/asha_bloc.dart';
 import 'features/chatbot/presentation/bloc/chatbot_bloc.dart';
 import 'features/geospatial/presentation/bloc/map_bloc.dart';
+import 'features/supply_analytics/presentation/bloc/supply_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -37,6 +38,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider<MapBloc>(
           create: (_) => sl<MapBloc>(),
+        ),
+        BlocProvider<SupplyBloc>(
+          create: (_) => sl<SupplyBloc>(),
         ),
       ],
       child: MaterialApp.router(

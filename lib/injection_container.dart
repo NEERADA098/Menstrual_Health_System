@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'features/asha_dashboard/presentation/bloc/asha_bloc.dart';
 import 'features/chatbot/presentation/bloc/chatbot_bloc.dart';
 import 'features/geospatial/presentation/bloc/map_bloc.dart';
+import 'features/supply_analytics/presentation/bloc/supply_bloc.dart';
 import 'core/network/api_client.dart';
 
 import 'core/sync/sync_service.dart';
@@ -101,6 +102,7 @@ Future<void> setupInjection() async {
   sl.registerLazySingleton(() => AshaBloc());
   sl.registerLazySingleton(() => ChatbotBloc());
   sl.registerLazySingleton(() => MapBloc());
+  sl.registerLazySingleton(() => SupplyBloc());
 
   // ── SYMPTOM TRACKING ─────────────────────────────────────────────────
   sl.registerLazySingleton(() => SymptomLocalDataSource(dbHelper: sl()));
