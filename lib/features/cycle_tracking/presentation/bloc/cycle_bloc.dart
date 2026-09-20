@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import '../../domain/entities/cycle_entity.dart';
 import '../../domain/usecases/log_cycle.dart';
 import '../../domain/usecases/get_cycle_history.dart';
@@ -6,24 +8,22 @@ import '../../domain/usecases/get_current_cycle.dart';
 import 'cycle_event.dart';
 import 'cycle_state.dart';
 
-/// CycleBloc - Orchestrates cycle data and computes the SIMPLE
-/// placeholder prediction (basic average of past cycles).
-///
-/// IMPORTANT: This is intentionally basic. Phase 9 will replace the
-/// _calculatePrediction() logic with a real LSTM model call, but
-/// because that swap happens entirely INSIDE this one method, the
-/// UI screens built in this phase will need ZERO changes later.
-/// This is Clean Architecture paying off concretely.
 class CycleBloc extends Bloc<CycleEvent, CycleState> {
   final LogCycle logCycle;
   final GetCycleHistory getCycleHistory;
   final GetCurrentCycle getCurrentCycle;
+  final Dio _dio;
 
   CycleBloc({
     required this.logCycle,
     required this.getCycleHistory,
     required this.getCurrentCycle,
-  }) : super(const CycleInitial()) {
+  })  : _dio = Dio(BaseOptions(
+          baseUrl: 'http://10.0.2.2:8000/api/v1',
+          connectTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
+        )),
+        super(const CycleInitial()) {
     on<CycleLoadRequested>(_onLoadRequested);
     on<CycleLogRequested>(_onLogRequested);
   }
@@ -59,12 +59,9 @@ class CycleBloc extends Bloc<CycleEvent, CycleState> {
       return;
     }
 
-    // Reload everything fresh after a successful log
     await _loadAndEmit(event.userId, emit);
   }
 
-  /// Shared logic: fetch history + current cycle, compute prediction,
-  /// emit one combined CycleLoaded state.
   Future<void> _loadAndEmit(String userId, Emitter<CycleState> emit) async {
     final historyResult = await getCycleHistory(userId);
     final currentResult = await getCurrentCycle(userId);
@@ -79,9 +76,38 @@ class CycleBloc extends Bloc<CycleEvent, CycleState> {
       (cycle) => cycle,
     );
 
-    final avgLength = _calculateAverageCycleLength(history);
     final currentDay = _calculateCurrentCycleDay(current);
-    final daysUntilNext = _calculateDaysUntilNextPeriod(current, avgLength);
+
+    // Try LSTM prediction from FastAPI first
+    double? predictedDays;
+    int avgLength = 28;
+    String predictionMethod = 'default';
+
+    try {
+      final response = await _dio.get('/predict/$userId');
+      if (response.statusCode == 200) {
+        final data = response.data as Map<String, dynamic>;
+        predictedDays = (data['predicted_days'] as num).toDouble();
+        avgLength = predictedDays.round();
+        predictionMethod = data['method'] as String;
+        debugPrint(
+          'Prediction: $predictedDays days via $predictionMethod'
+        );
+      }
+    } catch (e) {
+      // Fallback to local average if API unavailable
+      debugPrint('Prediction API unavailable, using local average: $e');
+      avgLength = _calculateAverageCycleLength(history);
+      predictedDays = _calculateDaysUntilNextPeriod(current, avgLength)
+          ?.toDouble();
+    }
+
+    final daysUntilNext = current != null && avgLength > 0
+        ? current.startDate
+            .add(Duration(days: avgLength))
+            .difference(DateTime.now())
+            .inDays
+        : null;
 
     emit(CycleLoaded(
       history: history,
@@ -92,36 +118,28 @@ class CycleBloc extends Bloc<CycleEvent, CycleState> {
     ));
   }
 
-  /// PLACEHOLDER PREDICTION LOGIC - replaced by LSTM in Phase 9.
-  /// Simple average of the gaps between recorded period start dates.
   int _calculateAverageCycleLength(List<CycleEntity> history) {
-    if (history.length < 2) return 28; // Medical default fallback
-
-    // History is sorted most-recent-first (from the repository query)
+    if (history.length < 2) return 28;
     final sorted = [...history]
       ..sort((a, b) => a.startDate.compareTo(b.startDate));
-
     final gaps = <int>[];
     for (var i = 1; i < sorted.length; i++) {
       final gap =
           sorted[i].startDate.difference(sorted[i - 1].startDate).inDays;
-      if (gap > 0 && gap < 90) gaps.add(gap); // Sanity filter
+      if (gap > 0 && gap < 90) gaps.add(gap);
     }
-
     if (gaps.isEmpty) return 28;
     return (gaps.reduce((a, b) => a + b) / gaps.length).round();
   }
 
   int? _calculateCurrentCycleDay(CycleEntity? current) {
     if (current == null) return null;
-    final daysSinceStart = DateTime.now().difference(current.startDate).inDays;
-    return daysSinceStart + 1; // Day 1 is the start date itself
+    return DateTime.now().difference(current.startDate).inDays + 1;
   }
 
   int? _calculateDaysUntilNextPeriod(CycleEntity? current, int avgLength) {
     if (current == null) return null;
-    final predictedNextStart = current.startDate.add(Duration(days: avgLength));
-    final daysUntil = predictedNextStart.difference(DateTime.now()).inDays;
-    return daysUntil;
+    final predicted = current.startDate.add(Duration(days: avgLength));
+    return predicted.difference(DateTime.now()).inDays;
   }
 }
