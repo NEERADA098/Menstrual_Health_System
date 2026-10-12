@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 class ApiClient {
-  static const String _baseUrl = 'http://localhost:8000/api/v1';
+  static const String _baseUrl = 'https://web-production-de68e.up.railway.app/api/v1';
   static const Duration _timeout = Duration(seconds: 30);
 
   late final Dio _dio;

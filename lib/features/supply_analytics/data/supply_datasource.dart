@@ -78,7 +78,7 @@ class LowStockAlert {
 
 class SupplyDataSource {
   final _dio = Dio(BaseOptions(
-    baseUrl: 'http://localhost:8000/api/v1',
+    baseUrl: 'https://web-production-de68e.up.railway.app/api/v1',
     connectTimeout: const Duration(seconds: 15),
     receiveTimeout: const Duration(seconds: 15),
   ));
